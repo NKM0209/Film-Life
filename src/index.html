@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Film Life — フィルムで暮らしを記録する</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+JP:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-cream: #F7F4EF;
+      --color-warm-white: #FDFCFA;
+      --color-sepia: #8B7355;
+      --color-sepia-light: #A89880;
+      --color-sepia-dark: #5C4A3A;
+      --color-charcoal: #2C2824;
+      --color-charcoal-soft: #4A4540;
+      --color-film-border: #D4CEC4;
+      --color-accent: #B8860B;
+      --color-dark-bg: #1a1816;
+      
+      --font-display: 'Cormorant Garamond', 'Noto Serif JP', serif;
+      --font-body: 'Noto Serif JP', serif;
+      --font-ui: 'Zen Kaku Gothic New', sans-serif;
+      
+      --grain-opacity: 0.03;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-cream);
+      color: var(--color-charcoal);
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    /* Film Grain Overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: var(--grain-opacity);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, var(--color-cream) 60%, transparent);
+      transition: all 0.4s ease;
+    }
+
+    .header.scrolled {
+      background: rgba(247, 244, 239, 0.95);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--color-charcoal);
+      text-decoration: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .logo:hover {
+      opacity: 0.7;
+    }
+
+    .nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav a {
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--color-charcoal-soft);
+      text-decoration: none;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--color-sepia);
+      transition: width 0.3s ease;
+    }
+
+    .nav a:hover {
+      color: var(--color-charcoal);
+    }
+
+    .nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 6rem 2rem;
+      position: relative;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      animation: fadeInUp 1.2s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      color: var(--color-charcoal);
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+    }
+
+    .hero-title span {
+      display: block;
+      font-size: 0.35em;
+      font-family: var(--font-body);
+      letter-spacing: 0.3em;
+      color: var(--color-sepia);
+      margin-top: 1rem;
+      font-weight: 400;
+    }
+
+    .hero-tagline {
+      font-size: 1rem;
+      color: var(--color-sepia-light);
+      letter-spacing: 0.08em;
+      margin-bottom: 3rem;
+      font-weight: 400;
+      font-style: italic;
+      font-family: var(--font-display);
+    }
+
+    .hero-decorative {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+      opacity: 0.4;
+    }
+
+    .film-hole {
+      width: 12px;
+      height: 18px;
+      border: 1px solid var(--color-sepia);
+      border-radius: 2px;
+    }
+
+    .hero-line {
+      width: 60px;
+      height: 1px;
+      background: var(--color-sepia);
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    .scroll-indicator span {
+      font-family: var(--font-ui);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--color-sepia-light);
+      writing-mode: vertical-rl;
+    }
+
+    .scroll-indicator::after {
+      content: '';
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--color-sepia-light), transparent);
+    }
+
+    /* Section Common */
+    section {
+      padding: 7rem 3rem;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-label {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      color: var(--color-sepia);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: var(--color-charcoal);
+    }
+
+    /* About Section */
+    .about {
+      background: var(--color-warm-white);
+      position: relative;
+    }
+
+    .about::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 60px;
+      background: var(--color-film-border);
+    }
+
+    .about-content {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .about-text {
+      font-size: 1rem;
+      line-height: 2.2;
+      color: var(--color-charcoal-soft);
+      margin-bottom: 2rem;
+    }
+
+    .about-text em {
+      font-style: normal;
+      color: var(--color-charcoal);
+      border-bottom: 1px solid var(--color-sepia-light);
+    }
+
+    /* Categories Section */
+    .categories {
+      background: var(--color-cream);
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .category-grid .category-card:nth-child(4),
+    .category-grid .category-card:nth-child(5) {
+      grid-column: span 1;
+    }
+
+    .category-card {
+      position: relative;
+      background: var(--color-warm-white);
+      border: 1px solid var(--color-film-border);
+      padding: 2.5rem 2rem;
+      transition: all 0.4s ease;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .category-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, transparent 40%, rgba(184, 134, 11, 0.03) 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .category-card:hover::before {
+      opacity: 1;
+    }
+
+    .category-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(44, 40, 36, 0.08);
+    }
+
+    .category-number {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--color-sepia-light);
+      margin-bottom: 1.2rem;
+    }
+
+    .category-title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--color-charcoal);
+      margin-bottom: 0.6rem;
+    }
+
+    .category-title-en {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      color: var(--color-sepia);
+      margin-bottom: 1.2rem;
+      font-style: italic;
+    }
+
+    .category-description {
+      font-size: 0.9rem;
+      color: var(--color-charcoal-soft);
+      line-height: 1.9;
+    }
+
+    .category-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--color-sepia);
+      text-decoration: none;
+      transition: gap 0.3s ease;
+    }
+
+    .category-link:hover {
+      gap: 1rem;
+    }
+
+    .category-link::after {
+      content: '→';
+      transition: transform 0.3s ease;
+    }
+
+    /* Film Diary Section */
+    .film-diary {
+      background: var(--color-dark-bg);
+      color: var(--color-cream);
+      padding: 7rem 3rem;
+    }
+
+    .film-diary .section-label {
+      color: var(--color-sepia-light);
+    }
+
+    .film-diary .section-title {
+      color: var(--color-cream);
+    }
+
+    .diary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .diary-entry {
+      position: relative;
+      aspect-ratio: 1;
+      background: var(--color-charcoal);
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .diary-entry::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(26, 24, 22, 0.8) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 1;
+    }
+
+    .diary-entry:hover::before {
+      opacity: 1;
+    }
+
+    .diary-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--color-charcoal) 0%, var(--color-sepia-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--color-sepia-light);
+      opacity: 0.3;
+    }
+
+    .diary-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5rem;
+      z-index: 2;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s ease;
+    }
+
+    .diary-entry:hover .diary-info {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .diary-date {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--color-sepia-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .diary-caption {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--color-cream);
+      line-height: 1.6;
+    }
+
+    .diary-meta {
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      color: var(--color-sepia-light);
+      margin-top: 0.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .diary-more {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .diary-more a {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      color: var(--color-sepia-light);
+      text-decoration: none;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid var(--color-sepia-dark);
+      transition: all 0.3s ease;
+    }
+
+    .diary-more a:hover {
+      color: var(--color-cream);
+      border-color: var(--color-sepia-light);
+    }
+
+    /* Latest Articles Section */
+    .latest {
+      background: var(--color-warm-white);
+    }
+
+    .article-list {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .article-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 2rem;
+      align-items: baseline;
+      padding: 1.8rem 0;
+      border-bottom: 1px solid var(--color-film-border);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .article-item:first-child {
+      border-top: 1px solid var(--color-film-border);
+    }
+
+    .article-item:hover {
+      padding-left: 1rem;
+    }
+
+    .article-date {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--color-sepia-light);
+      min-width: 90px;
+    }
+
+    .article-title {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--color-charcoal);
+      line-height: 1.6;
+      transition: color 0.3s ease;
+    }
+
+    .article-item:hover .article-title {
+      color: var(--color-sepia-dark);
+    }
+
+    .article-category {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--color-sepia);
+      font-style: italic;
+    }
+
+    /* Quote Section */
+    .quote-section {
+      background: var(--color-cream);
+      padding: 8rem 3rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .quote-section::before,
+    .quote-section::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 60px;
+      background: var(--color-film-border);
+    }
+
+    .quote-section::before {
+      top: 0;
+    }
+
+    .quote-section::after {
+      bottom: 0;
+    }
+
+    .quote {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .quote-text {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-weight: 400;
+      font-style: italic;
+      line-height: 2;
+      color: var(--color-charcoal);
+      letter-spacing: 0.02em;
+    }
+
+    .quote-mark {
+      display: block;
+      font-size: 3.5rem;
+      color: var(--color-sepia-light);
+      line-height: 1;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--color-charcoal);
+      color: var(--color-cream);
+      padding: 4rem 3rem;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      letter-spacing: 0.2em;
+      color: var(--color-cream);
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-tagline {
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--color-sepia-light);
+      margin-bottom: 2.5rem;
+    }
+
+    .footer-nav {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-nav a {
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      color: var(--color-sepia-light);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.3s ease;
+    }
+
+    .footer-nav a:hover {
+      color: var(--color-cream);
+    }
+
+    .footer-copyright {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--color-sepia-dark);
+    }
+
+    /* Film Strip Decoration */
+    .film-strip-decoration {
+      display: flex;
+      justify-content: center;
+      padding: 2rem 0;
+      gap: 6px;
+      opacity: 0.2;
+    }
+
+    .film-strip-decoration .hole {
+      width: 14px;
+      height: 20px;
+      border: 1.5px solid currentColor;
+      border-radius: 2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .category-grid .category-card:nth-child(5) {
+        grid-column: span 2;
+        max-width: 50%;
+        justify-self: center;
+      }
+
+      .diary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 1rem 1.5rem;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      section {
+        padding: 5rem 1.5rem;
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .category-grid .category-card:nth-child(5) {
+        grid-column: span 1;
+        max-width: 100%;
+      }
+
+      .diary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .article-item {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+
+      .article-category {
+        display: none;
+      }
+
+      .footer-nav {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+
+    /* Fade-in animations on scroll */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-in-delay-1 { transition-delay: 0.1s; }
+    .fade-in-delay-2 { transition-delay: 0.2s; }
+    .fade-in-delay-3 { transition-delay: 0.3s; }
+    .fade-in-delay-4 { transition-delay: 0.4s; }
+    .fade-in-delay-5 { transition-delay: 0.5s; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="#" class="logo">FILM LIFE</a>
+    <nav class="nav">
+      <a href="#about">About</a>
+      <a href="#categories">Contents</a>
+      <a href="#diary">Diary</a>
+      <a href="#latest">Articles</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Film Life
+        <span>フィルムで暮らしを記録する</span>
+      </h1>
+      <p class="hero-tagline">Live your life like it's a film</p>
+      <div class="hero-decorative">
+        <div class="film-hole"></div>
+        <div class="film-hole"></div>
+        <div class="hero-line"></div>
+        <div class="film-hole"></div>
+        <div class="film-hole"></div>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <span>scroll</span>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="section-header fade-in">
+      <p class="section-label">About</p>
+      <h2 class="section-title">このサイトについて</h2>
+    </div>
+    <div class="about-content fade-in">
+      <p class="about-text">
+        Film Lifeは、<em>フィルムカメラで日々の暮らしを記録すること</em>をテーマにした個人サイトです。<br><br>
+        限られた36枚の中で、何を撮り、何を撮らないか。<br>
+        その選択を重ねるうちに、日常が一本の映画のように見えてくる。<br><br>
+        入門ガイドから日々の写真日記まで、<br>
+        フィルムのある暮らしを綴っていきます。
+      </p>
+    </div>
+  </section>
+
+  <section class="categories" id="categories">
+    <div class="section-header fade-in">
+      <p class="section-label">Contents</p>
+      <h2 class="section-title">コンテンツ</h2>
+    </div>
+    <div class="category-grid">
+      <article class="category-card fade-in fade-in-delay-1">
+        <p class="category-number">01</p>
+        <h3 class="category-title">はじめてのフィルム</h3>
+        <p class="category-title-en">First Roll</p>
+        <p class="category-description">
+          最初の1本を撮り終えるまでのガイド。カメラ選び、フィルム選び、現像の出し方。
+        </p>
+        <a href="#" class="category-link">記事を読む</a>
+      </article>
+
+      <article class="category-card fade-in fade-in-delay-2">
+        <p class="category-number">02</p>
+        <h3 class="category-title">撮ること</h3>
+        <p class="category-title-en">Shooting</p>
+        <p class="category-description">
+          露出、光の読み方、構図。技術と、その奥にある考え方について。
+        </p>
+        <a href="#" class="category-link">記事を読む</a>
+      </article>
+
+      <article class="category-card fade-in fade-in-delay-3">
+        <p class="category-number">03</p>
+        <h3 class="category-title">機材のこと</h3>
+        <p class="category-title-en">Gear</p>
+        <p class="category-description">
+          カメラ、レンズ、フィルム。深入りしすぎない、実用的な機材知識。
+        </p>
+        <a href="#" class="category-link">記事を読む</a>
+      </article>
+
+      <article class="category-card fade-in fade-in-delay-4">
+        <p class="category-number">04</p>
+        <h3 class="category-title">暮らしの記録</h3>
+        <p class="category-title-en">Everyday Scenes</p>
+        <p class="category-description">
+          フィルムで日常を撮ることについてのエッセイ。記録すること、残すこと。
+        </p>
+        <a href="#" class="category-link">記事を読む</a>
+      </article>
+
+      <article class="category-card fade-in fade-in-delay-5">
+        <p class="category-number">05</p>
+        <h3 class="category-title">写真日記</h3>
+        <p class="category-title-en">Film Diary</p>
+        <p class="category-description">
+          日々撮った写真と、短い言葉。フィルムのある日常の断片。
+        </p>
+        <a href="#" class="category-link">記事を読む</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="film-diary" id="diary">
+    <div class="section-header fade-in">
+      <p class="section-label">Film Diary</p>
+      <h2 class="section-title">写真日記</h2>
+    </div>
+    <div class="diary-grid fade-in">
+      <article class="diary-entry">
+        <div class="diary-placeholder">01</div>
+        <div class="diary-info">
+          <p class="diary-date">2024.12.25</p>
+          <p class="diary-caption">冬の光は午後3時を過ぎると急に傾く</p>
+          <p class="diary-meta">Kodak Gold 200</p>
+        </div>
+      </article>
+      <article class="diary-entry">
+        <div class="diary-placeholder">02</div>
+        <div class="diary-info">
+          <p class="diary-date">2024.12.22</p>
+          <p class="diary-caption">駅前の古い喫茶店</p>
+          <p class="diary-meta">Fuji C200</p>
+        </div>
+      </article>
+      <article class="diary-entry">
+        <div class="diary-placeholder">03</div>
+        <div class="diary-info">
+          <p class="diary-date">2024.12.18</p>
+          <p class="diary-caption">夕方の商店街を抜けて</p>
+          <p class="diary-meta">Kodak Portra 400</p>
+        </div>
+      </article>
+      <article class="diary-entry">
+        <div class="diary-placeholder">04</div>
+        <div class="diary-info">
+          <p class="diary-date">2024.12.15</p>
+          <p class="diary-caption">窓越しの雨</p>
+          <p class="diary-meta">Ilford HP5+</p>
+        </div>
+      </article>
+      <article class="diary-entry">
+        <div class="diary-placeholder">05</div>
+        <div class="diary-info">
+          <p class="diary-date">2024.12.12</p>
+          <p class="diary-caption">帰り道の空</p>
+          <p class="diary-meta">Kodak Gold 200</p>
+        </div>
+      </article>
+      <article class="diary-entry">
+        <div class="diary-placeholder">06</div>
+        <div class="diary-info">
+          <p class="diary-date">2024.12.08</p>
+          <p class="diary-caption">朝のコーヒー</p>
+          <p class="diary-meta">Kodak Portra 160</p>
+        </div>
+      </article>
+      <article class="diary-entry">
+        <div class="diary-placeholder">07</div>
+        <div class="diary-info">
+          <p class="diary-date">2024.12.05</p>
+          <p class="diary-caption">路地裏の自転車</p>
+          <p class="diary-meta">Fuji C200</p>
+        </div>
+      </article>
+      <article class="diary-entry">
+        <div class="diary-placeholder">08</div>
+        <div class="diary-info">
+          <p class="diary-date">2024.12.01</p>
+          <p class="diary-caption">12月のはじまり</p>
+          <p class="diary-meta">Kodak Gold 200</p>
+        </div>
+      </article>
+    </div>
+    <div class="diary-more fade-in">
+      <a href="#">View all entries</a>
+    </div>
+  </section>
+
+  <section class="latest" id="latest">
+    <div class="section-header fade-in">
+      <p class="section-label">Latest Articles</p>
+      <h2 class="section-title">最新の記事</h2>
+    </div>
+    <div class="article-list fade-in">
+      <article class="article-item">
+        <span class="article-date">2024.12.20</span>
+        <h3 class="article-title">はじめてのフィルムカメラ、何を選ぶべきか</h3>
+        <span class="article-category">First Roll</span>
+      </article>
+      <article class="article-item">
+        <span class="article-date">2024.12.15</span>
+        <h3 class="article-title">フィルムの選び方──最初の1本におすすめのフィルム</h3>
+        <span class="article-category">First Roll</span>
+      </article>
+      <article class="article-item">
+        <span class="article-date">2024.12.10</span>
+        <h3 class="article-title">露出の基本──絞り、シャッター速度、ISO</h3>
+        <span class="article-category">Shooting</span>
+      </article>
+      <article class="article-item">
+        <span class="article-date">2024.12.05</span>
+        <h3 class="article-title">現像に出す──どこに出す？ 何を頼む？</h3>
+        <span class="article-category">First Roll</span>
+      </article>
+      <article class="article-item">
+        <span class="article-date">2024.11.28</span>
+        <h3 class="article-title">Sunny 16ルール──露出計がなくても撮れる</h3>
+        <span class="article-category">Shooting</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="quote-section">
+    <div class="quote fade-in">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">
+        日常を、一本の映画のように。<br>
+        だからフィルムで撮り続ける。
+      </p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="film-strip-decoration">
+      <div class="hole"></div>
+      <div class="hole"></div>
+      <div class="hole"></div>
+      <div class="hole"></div>
+      <div class="hole"></div>
+      <div class="hole"></div>
+    </div>
+    <p class="footer-logo">FILM LIFE</p>
+    <p class="footer-tagline">フィルムで暮らしを記録する</p>
+    <nav class="footer-nav">
+      <a href="#">About</a>
+      <a href="#">First Roll</a>
+      <a href="#">Shooting</a>
+      <a href="#">Gear</a>
+      <a href="#">Everyday Scenes</a>
+      <a href="#">Film Diary</a>
+    </nav>
+    <p class="footer-copyright">© 2024 Film Life</p>
+  </footer>
+
+  <script>
+    // Fade-in animation on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('.header');
+      if (window.pageYOffset > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+</html>
